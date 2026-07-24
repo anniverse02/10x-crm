@@ -171,3 +171,4 @@ function showToast(message, type) {
   setTimeout(function () {
     toast.className = "toast";
   }, 3000);
+}
