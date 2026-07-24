@@ -1,7 +1,6 @@
 const welcomeMessage = document.getElementById("welcomeMessage");
 const currentDate = document.getElementById("currentDate");
 const currentTime = document.getElementById("currentTime");
-const toggleButton = document.getElementById("themeToggle");
 
 const totalClients = document.getElementById("totalClients");
 const activeDeals = document.getElementById("activeDeals");
@@ -16,11 +15,6 @@ const lostCount = document.getElementById("lostCount");
 
 const recentClientsList =
   document.getElementById("recentClientsList");
-
-// Change dashboard theme
-toggleButton.addEventListener("click", function () {
-  document.body.classList.toggle("dark");
-});
 
 
 // Get current session
