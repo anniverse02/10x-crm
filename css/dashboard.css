@@ -1,0 +1,289 @@
+body {
+  min-height: 100vh;
+  background-color: #f4f5f7;
+  color: #1f2937;
+}
+
+.main-header {
+  min-height: 68px;
+  padding: 0 35px;
+  display: flex;
+  align-items: center;
+  gap: 35px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #d9dde3;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #1f2937;
+  font-size: 17px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.logo-mark {
+  padding: 8px;
+  border-radius: 5px;
+  background-color: #315f9b;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.main-navigation {
+  display: flex;
+  align-self: stretch;
+  gap: 24px;
+}
+
+.main-navigation a {
+  padding: 23px 2px 18px;
+  border-bottom: 3px solid transparent;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.main-navigation a:hover {
+  color: #315f9b;
+}
+
+.main-navigation a.active {
+  border-bottom-color: #315f9b;
+  color: #315f9b;
+  font-weight: bold;
+}
+
+.header-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.header-actions button {
+  padding: 8px 13px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.theme-button {
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #374151;
+}
+
+.theme-button:hover {
+  background-color: #f3f4f6;
+}
+
+.logout-button {
+  border: 1px solid #c43d3d;
+  background-color: #c43d3d;
+  color: #ffffff;
+}
+
+.logout-button:hover {
+  background-color: #a93232;
+}
+
+.dashboard-container {
+  width: 92%;
+  max-width: 1150px;
+  margin: 32px auto;
+}
+
+.welcome-section {
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.welcome-text h1 {
+  margin-bottom: 7px;
+  font-size: 30px;
+}
+
+.welcome-text p {
+  color: #6b7280;
+}
+
+.date-time-box {
+  min-width: 190px;
+  padding: 13px 16px;
+  border: 1px solid #d9dde3;
+  background-color: #ffffff;
+  text-align: right;
+}
+
+.date-time-box p {
+  margin-bottom: 5px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.date-time-box strong {
+  font-size: 19px;
+}
+
+.stats-grid {
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid #d9dde3;
+  background-color: #ffffff;
+}
+
+.stat-card {
+  padding: 21px 18px;
+  border-right: 1px solid #d9dde3;
+}
+
+.stat-card:last-child {
+  border-right: none;
+}
+
+.stat-card p {
+  margin-bottom: 10px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.stat-card h2 {
+  margin-bottom: 8px;
+  font-size: 27px;
+}
+
+.stat-card span {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 22px;
+}
+
+.dashboard-panel {
+  border: 1px solid #d9dde3;
+  background-color: #ffffff;
+}
+
+.panel-heading,
+.recent-header {
+  padding: 17px 18px;
+  border-bottom: 1px solid #d9dde3;
+}
+
+.panel-heading h2,
+.recent-header h2 {
+  margin-bottom: 5px;
+  font-size: 19px;
+}
+
+.panel-heading p,
+.recent-header p {
+  color: #7b8491;
+  font-size: 12px;
+}
+
+.pipeline-item {
+  padding: 17px 18px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #eceef1;
+}
+
+.pipeline-item:last-child {
+  border-bottom: none;
+}
+
+.pipeline-item span {
+  color: #4b5563;
+}
+
+.pipeline-item strong {
+  color: #1f2937;
+}
+
+.recent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.recent-header a {
+  color: #315f9b;
+  font-size: 13px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.recent-header a:hover {
+  text-decoration: underline;
+}
+
+.clients-table {
+  overflow-x: auto;
+}
+
+.table-header,
+.recent-client-row {
+  min-width: 620px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 0.8fr 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.table-header {
+  padding: 11px 18px;
+  background-color: #f4f5f7;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.recent-client-row {
+  padding: 14px 18px;
+  border-bottom: 1px solid #eceef1;
+  font-size: 14px;
+}
+
+.empty-message {
+  padding: 35px;
+  color: #7b8491;
+  text-align: center;
+}
+
+.status-badge {
+  width: fit-content;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-lead {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-contacted {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-won {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-lost {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
