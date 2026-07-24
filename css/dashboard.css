@@ -287,3 +287,57 @@ body {
   background-color: #fee2e2;
   color: #991b1b;
 }
+
+body.dark {
+  background-color: #111827;
+  color: white;
+}
+
+body.dark {
+  background-color: #111827;
+  color: #ffffff;
+}
+
+body.dark .main-header,
+body.dark .date-time-box,
+body.dark .stats-grid,
+body.dark .dashboard-panel,
+body.dark .theme-button {
+  background-color: #1f2937;
+  color: #ffffff;
+  border-color: #374151;
+}
+
+body.dark .logo,
+body.dark .pipeline-item strong {
+  color: #ffffff;
+}
+
+body.dark .main-navigation a,
+body.dark .welcome-text p,
+body.dark .date-time-box p,
+body.dark .stat-card p,
+body.dark .stat-card span,
+body.dark .panel-heading p,
+body.dark .recent-header p,
+body.dark .pipeline-item span,
+body.dark .empty-message {
+  color: #d1d5db;
+}
+
+body.dark .stat-card,
+body.dark .panel-heading,
+body.dark .recent-header,
+body.dark .pipeline-item,
+body.dark .recent-client-row {
+  border-color: #374151;
+}
+
+body.dark .table-header {
+  background-color: #111827;
+  color: #d1d5db;
+}
+
+body.dark .theme-button:hover {
+  background-color: #374151;
+}
