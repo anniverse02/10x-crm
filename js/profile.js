@@ -7,9 +7,7 @@ const profileEmail = document.getElementById("profileEmail");
 const profileCompany = document.getElementById("profileCompany");
 
 const profileFullNameError =document.getElementById("profileFullNameError");
-
 const profileEmailError =document.getElementById("profileEmailError");
-
 const currentPassword = document.getElementById("currentPassword");
 const newPassword = document.getElementById("newPassword");
 
@@ -19,7 +17,6 @@ const newPasswordError =document.getElementById("newPasswordError");
 const confirmNewPasswordError =document.getElementById("confirmNewPasswordError");
 
 const profileInitials = document.getElementById("profileInitials");
-
 const profileDisplayName = document.getElementById("profileDisplayName");
 const profileDisplayEmail = document.getElementById("profileDisplayEmail");
 const profileDisplayCompany =document.getElementById("profileDisplayCompany");
