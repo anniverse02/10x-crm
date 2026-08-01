@@ -1,37 +1,68 @@
+import { showToast } from "./toast.js";
+
+import {
+  getStorageData,
+  saveStorageData
+} from "./storage.js";
+
+import {
+  isValidEmail,
+  showError,
+  clearError
+} from "./validation.js";
+
 const clientsList = document.getElementById("clientsList");
-const openClientModalButton =document.getElementById("openClientModal");
-const clientModal =document.getElementById("clientModal");
-const closeClientModalButton =document.getElementById("closeClientModal");
-const cancelClientButton = document.getElementById("cancelClientButton");
+const searchInput = document.getElementById("searchInput");
+
+const openClientModalButton = document.getElementById(
+  "openClientModal"
+);
+
+const clientModal = document.getElementById("clientModal");
+
+const closeClientModalButton = document.getElementById(
+  "closeClientModal"
+);
+
+const cancelClientButton = document.getElementById(
+  "cancelClientButton"
+);
+
 const addClientForm = document.getElementById("addClientForm");
+
 const clientNameInput = document.getElementById("clientName");
 const clientEmailInput = document.getElementById("clientEmail");
 const clientPhoneInput = document.getElementById("clientPhone");
-const clientCompanyInput =document.getElementById("clientCompany");
-const clientDealValueInput = document.getElementById("clientDealValue");
-const clientStatusInput =document.getElementById("clientStatus");
-const clientNameError = document.getElementById("clientNameError");const clientEmailError =document.getElementById("clientEmailError");
+const clientCompanyInput = document.getElementById("clientCompany");
+
+const clientDealValueInput = document.getElementById(
+  "clientDealValue"
+);
+
+const clientStatusInput = document.getElementById("clientStatus");
+
+const clientNameError = document.getElementById("clientNameError");
+const clientEmailError = document.getElementById("clientEmailError");
 const clientPhoneError = document.getElementById("clientPhoneError");
-const clientDealValueError = document.getElementById("clientDealValueError");
+
+const clientDealValueError = document.getElementById(
+  "clientDealValueError"
+);
 
 let clients = [];
 
-// Open Add Client modal
 openClientModalButton.addEventListener("click", function () {
   clientModal.classList.add("open");
 });
 
-// Close modal with X button
 closeClientModalButton.addEventListener("click", function () {
   closeClientModal();
 });
 
-// Close modal with Cancel button
 cancelClientButton.addEventListener("click", function () {
   closeClientModal();
 });
 
-// Close modal by clicking on the background
 clientModal.addEventListener("click", function (event) {
   if (event.target === clientModal) {
     closeClientModal();
@@ -44,15 +75,14 @@ function closeClientModal() {
   clearClientFormErrors();
 }
 
-// Load clients from localStorage or DummyJSON
 async function loadClients() {
   clientsList.innerHTML =
     '<p class="loading-message">Loading clients...</p>';
 
-  const savedClients = localStorage.getItem("crm_clients");
+  const savedClients = getStorageData("crm_clients", null);
 
   if (savedClients) {
-    clients = JSON.parse(savedClients);
+    clients = savedClients;
     renderClients(clients);
     return;
   }
@@ -77,7 +107,8 @@ async function loadClients() {
         company: user.company ? user.company.name : "",
         image: user.image,
         status: "Lead",
-        dealValue:Math.floor(Math.random() * 10000) + 5000,
+        dealValue:
+          Math.floor(Math.random() * 10000) + 5000,
         notes: [],
         createdAt: new Date().toISOString()
       };
@@ -89,7 +120,8 @@ async function loadClients() {
     clientsList.innerHTML = `
       <div class="error-message">
         <p>
-          Could not load clients. Check your connection and try again.
+          Could not load clients.
+          Check your connection and try again.
         </p>
 
         <button
@@ -110,15 +142,10 @@ async function loadClients() {
   }
 }
 
-// Save clients in localStorage
 function saveClients() {
-  localStorage.setItem(
-    "crm_clients",
-    JSON.stringify(clients)
-  );
+  saveStorageData("crm_clients", clients);
 }
 
-// Render clients
 function renderClients(list) {
   clientsList.innerHTML = "";
 
@@ -183,205 +210,249 @@ function renderClients(list) {
   });
 }
 
-// Add new client
-addClientForm.addEventListener("submit", async function (event) {
-  event.preventDefault();
-
-  const name = clientNameInput.value.trim();
-  const email = clientEmailInput.value
+searchInput.addEventListener("input", function () {
+  const search = searchInput.value
     .trim()
     .toLowerCase();
 
-  const phone = clientPhoneInput.value.trim();
-  const company = clientCompanyInput.value.trim();
+  const filteredClients = clients.filter(function (client) {
+    const clientName = client.name.toLowerCase();
 
-  const dealValueText =
-    clientDealValueInput.value.trim();
+    const clientCompany = (client.company || "")
+      .toLowerCase();
 
-  const dealValue = Number(dealValueText);
-  const status = clientStatusInput.value;
+    return (
+      clientName.includes(search) ||
+      clientCompany.includes(search)
+    );
+  });
 
-  clearClientFormErrors();
+  renderClients(filteredClients);
+});
 
-  let hasError = false;
+addClientForm.addEventListener(
+  "submit",
+  async function (event) {
+    event.preventDefault();
 
-  // Validate name
-  if (name.length < 3) {
-    clientNameError.textContent =
-      "Name must be at least 3 characters";
+    const name = clientNameInput.value.trim();
 
-    clientNameInput.classList.add("input-error");
-    hasError = true;
-  }
+    const email = clientEmailInput.value
+      .trim()
+      .toLowerCase();
 
-  // Validate email
-  const atPosition = email.indexOf("@");
-  const dotPosition = email.indexOf(".", atPosition + 1);
+    const phone = clientPhoneInput.value.trim();
+    const company = clientCompanyInput.value.trim();
 
-  const isEmailValid =
-    atPosition > 0 &&
-    dotPosition > atPosition + 1;
+    const dealValueText =
+      clientDealValueInput.value.trim();
 
-  if (!isEmailValid) {
-    clientEmailError.textContent =
-      "Please enter a valid email address";
+    const dealValue = Number(dealValueText);
+    const status = clientStatusInput.value;
 
-    clientEmailInput.classList.add("input-error");
-    hasError = true;
-  }
+    clearClientFormErrors();
 
-  // Check duplicate email
-  if (isEmailValid) {
-    const emailExists = clients.some(function (client) {
-      return client.email.toLowerCase() === email;
-    });
+    let hasError = false;
 
-    if (emailExists) {
-      clientEmailError.textContent =
-        "A client with this email already exists";
+    if (name.length < 3) {
+      showError(
+        clientNameInput,
+        clientNameError,
+        "Name must be at least 3 characters"
+      );
 
-      clientEmailInput.classList.add("input-error");
       hasError = true;
     }
-  }
 
-  // Validate phone
-  if (phone !== "" && phone.length < 6) {
-    clientPhoneError.textContent =
-      "Phone number looks too short";
+    const emailValid = isValidEmail(email);
 
-    clientPhoneInput.classList.add("input-error");
-    hasError = true;
-  }
+    if (!emailValid) {
+      showError(
+        clientEmailInput,
+        clientEmailError,
+        "Please enter a valid email address"
+      );
 
-  // Validate deal value
-  if (
-    dealValueText === "" ||
-    isNaN(dealValue) ||
-    dealValue <= 0
-  ) {
-    clientDealValueError.textContent =
-      "Deal value must be a positive number";
-
-    clientDealValueInput.classList.add("input-error");
-    hasError = true;
-  }
-
-  if (hasError) {
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      "https://dummyjson.com/users/add",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          firstName: name,
-          email: email,
-          phone: phone,
-          company: company
-        })
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Could not add client");
+      hasError = true;
     }
 
-    await response.json();
+    if (emailValid) {
+      const emailExists = clients.some(function (client) {
+        return client.email.toLowerCase() === email;
+      });
 
-    const newClient = {
-      id: Date.now(),
-      name: name,
-      email: email,
-      phone: phone,
-      company: company,
-      image: "",
-      status: status,
-      dealValue: dealValue,
-      notes: [],
-      createdAt: new Date().toISOString()
-    };
+      if (emailExists) {
+        showError(
+          clientEmailInput,
+          clientEmailError,
+          "A client with this email already exists"
+        );
 
-    clients.push(newClient);
+        hasError = true;
+      }
+    }
 
-    saveClients();
-    renderClients(clients);
-    closeClientModal();
+    if (phone !== "" && phone.length < 6) {
+      showError(
+        clientPhoneInput,
+        clientPhoneError,
+        "Phone number looks too short"
+      );
 
-    showToast("Client added", "success");
-  } catch (error) {
-    showToast("Could not add client", "error");
+      hasError = true;
+    }
+
+    if (
+      dealValueText === "" ||
+      isNaN(dealValue) ||
+      dealValue <= 0
+    ) {
+      showError(
+        clientDealValueInput,
+        clientDealValueError,
+        "Deal value must be a positive number"
+      );
+
+      hasError = true;
+    }
+
+    if (hasError) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://dummyjson.com/users/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            firstName: name,
+            email: email,
+            phone: phone,
+            company: company
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Could not add client");
+      }
+
+      await response.json();
+
+      const newClient = {
+        id: Date.now(),
+        name: name,
+        email: email,
+        phone: phone,
+        company: company,
+        image: "",
+        status: status,
+        dealValue: dealValue,
+        notes: [],
+        createdAt: new Date().toISOString()
+      };
+
+      clients.push(newClient);
+
+      saveClients();
+      renderClients(clients);
+      closeClientModal();
+
+      showToast(
+        "Client added",
+        "success"
+      );
+    } catch (error) {
+      showToast(
+        "Could not add client",
+        "error"
+      );
+    }
   }
-});
+);
 
-// Delete client
-clientsList.addEventListener("click", async function (event) {
-  const deleteButton =
-    event.target.closest(".delete-button");
+clientsList.addEventListener(
+  "click",
+  async function (event) {
+    const deleteButton = event.target.closest(
+      ".delete-button"
+    );
 
-  if (!deleteButton) {
-    return;
+    if (!deleteButton) {
+      return;
+    }
+
+    const clientId = Number(deleteButton.dataset.id);
+
+    const confirmed = confirm(
+      "Delete this client? This cannot be undone."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://dummyjson.com/users/${clientId}`,
+        {
+          method: "DELETE"
+        }
+      );
+
+      if (
+        !response.ok &&
+        response.status !== 404
+      ) {
+        throw new Error("Could not delete client");
+      }
+
+      clients = clients.filter(function (client) {
+        return client.id !== clientId;
+      });
+
+      saveClients();
+      renderClients(clients);
+
+      showToast(
+        "Client deleted",
+        "success"
+      );
+    } catch (error) {
+      showToast(
+        "Could not delete client",
+        "error"
+      );
+    }
   }
+);
 
-  const clientId = Number(deleteButton.dataset.id);
-
-  const confirmed = confirm(
-    "Delete this client? This cannot be undone."
+function clearClientFormErrors() {
+  clearError(
+    clientNameInput,
+    clientNameError
   );
 
-  if (!confirmed) {
-    return;
-  }
+  clearError(
+    clientEmailInput,
+    clientEmailError
+  );
 
-  try {
-    const response = await fetch(
-      `https://dummyjson.com/users/${clientId}`,
-      {
-        method: "DELETE"
-      }
-    );
+  clearError(
+    clientPhoneInput,
+    clientPhoneError
+  );
 
-    /*
-      DummyJSON does not really save added clients,
-      so deleting a local client may return 404.
-      We still remove it from local state.
-    */
-    if (!response.ok && response.status !== 404) {
-      throw new Error("Could not delete client");
-    }
-
-    clients = clients.filter(function (client) {
-      return client.id !== clientId;
-    });
-
-    saveClients();
-    renderClients(clients);
-
-    showToast("Client deleted", "success");
-  } catch (error) {
-    showToast("Could not delete client", "error");
-  }
-});
-
-// Clear Add Client form errors
-function clearClientFormErrors() {
-  clientNameError.textContent = "";
-  clientEmailError.textContent = "";
-  clientPhoneError.textContent = "";
-  clientDealValueError.textContent = "";
-
-  clientNameInput.classList.remove("input-error");
-  clientEmailInput.classList.remove("input-error");
-  clientPhoneInput.classList.remove("input-error");
-  clientDealValueInput.classList.remove("input-error");
+  clearError(
+    clientDealValueInput,
+    clientDealValueError
+  );
 }
 
-// Return status badge class
 function getStatusClass(status) {
   if (status === "Lead") {
     return "status-lead";
@@ -400,18 +471,6 @@ function getStatusClass(status) {
   }
 
   return "";
-}
-
-// Show toast message
-function showToast(message, type) {
-  const toast = document.getElementById("toast");
-
-  toast.textContent = message;
-  toast.className = `toast ${type}`;
-
-  setTimeout(function () {
-    toast.className = "toast";
-  }, 3000);
 }
 
 loadClients();

@@ -1,4 +1,4 @@
- const logoutButton = document.getElementById("logoutButton");
+const logoutButton = document.getElementById("logoutButton");
 
 // Logout user
 function logout() {

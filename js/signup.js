@@ -1,12 +1,18 @@
 import { showToast } from "./toast.js";
 
+import {getStorageData,saveStorageData} from "./storage.js";
+
+import {isValidEmail,showError,clearError}from "./validation.js";
+
 const signupForm = document.getElementById("signupForm");
 
 const fullNameInput = document.getElementById("fullName");
 const emailInput = document.getElementById("email");
 const companyInput = document.getElementById("company");
 const passwordInput = document.getElementById("password");
-const confirmPasswordInput = document.getElementById("confirmPassword");
+const confirmPasswordInput = document.getElementById(
+  "confirmPassword"
+);
 
 const fullNameError = document.getElementById("fullNameError");
 const emailError = document.getElementById("emailError");
@@ -54,7 +60,11 @@ signupForm.addEventListener("submit", function (event) {
   const hasLetter = /[a-zA-Z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
 
-  if (password.length < 8 || !hasLetter || !hasNumber) {
+  if (
+    password.length < 8 ||
+    !hasLetter ||
+    !hasNumber
+  ) {
     showError(
       passwordInput,
       passwordError,
@@ -64,7 +74,7 @@ signupForm.addEventListener("submit", function (event) {
     isValid = false;
   }
 
-  // Password validation
+  // Confirm Password validation
   if (confirmPassword !== password) {
     showError(
       confirmPasswordInput,
@@ -80,9 +90,8 @@ signupForm.addEventListener("submit", function (event) {
     return;
   }
 
-  // Load existing users 
-  const users =
-    JSON.parse(localStorage.getItem("crm_users")) || [];
+  // Load existing users
+  const users = getStorageData("crm_users", []);
 
   // Duplicate email validation
   const emailExists = users.some(function (user) {
@@ -111,10 +120,7 @@ signupForm.addEventListener("submit", function (event) {
 
   users.push(newUser);
 
-  localStorage.setItem(
-    "crm_users",
-    JSON.stringify(users)
-  );
+  saveStorageData("crm_users", users);
 
   showToast(
     "Account created successfully! Please log in.",
@@ -128,40 +134,24 @@ signupForm.addEventListener("submit", function (event) {
   }, 1500);
 });
 
-function showError(input, errorElement, message) {
-  input.classList.add("input-error");
-  errorElement.textContent = message;
-}
-
 function clearErrors() {
-  const inputs = [
+  clearError(
     fullNameInput,
+    fullNameError
+  );
+
+  clearError(
     emailInput,
+    emailError
+  );
+
+  clearError(
     passwordInput,
-    confirmPasswordInput
-  ];
+    passwordError
+  );
 
-  const errors = [
-    fullNameError,
-    emailError,
-    passwordError,
+  clearError(
+    confirmPasswordInput,
     confirmPasswordError
-  ];
-
-inputs.forEach(function (input) {
-    input.classList.remove("input-error");
-  });
-
-  errors.forEach(function (error) {
-    error.textContent = "";
-  });
+  );
 }
-
-function isValidEmail(email) {
-  const atIndex = email.indexOf("@");
-  const dotIndex = email.indexOf(".", atIndex + 1);
-
-  return atIndex > 0 && dotIndex > atIndex + 1;
-}
-
-

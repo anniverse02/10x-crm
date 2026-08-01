@@ -1,3 +1,17 @@
+import { showToast } from "./toast.js";
+
+import {
+  getStorageData,
+  saveStorageData,
+  removeStorageData
+} from "./storage.js";
+
+import {
+  isValidEmail,
+  showError,
+  clearError
+} from "./validation.js";
+
 const profileForm = document.getElementById("profileForm");
 const passwordForm = document.getElementById("passwordForm");
 const resetCrmButton = document.getElementById("resetCrmButton");
@@ -6,39 +20,55 @@ const profileFullName = document.getElementById("profileFullName");
 const profileEmail = document.getElementById("profileEmail");
 const profileCompany = document.getElementById("profileCompany");
 
-const profileFullNameError =document.getElementById("profileFullNameError");
-const profileEmailError =document.getElementById("profileEmailError");
+const profileFullNameError = document.getElementById(
+  "profileFullNameError"
+);
+
+const profileEmailError = document.getElementById(
+  "profileEmailError"
+);
+
 const currentPassword = document.getElementById("currentPassword");
 const newPassword = document.getElementById("newPassword");
 
-const confirmNewPassword = document.getElementById("confirmNewPassword");
-const currentPasswordError =document.getElementById("currentPasswordError");
-const newPasswordError =document.getElementById("newPasswordError");
-const confirmNewPasswordError =document.getElementById("confirmNewPasswordError");
-
-const profileInitials = document.getElementById("profileInitials");
-const profileDisplayName = document.getElementById("profileDisplayName");
-const profileDisplayEmail = document.getElementById("profileDisplayEmail");
-const profileDisplayCompany =document.getElementById("profileDisplayCompany");
-
-const toast = document.getElementById("toast");
-
-// Get saved user information
-const session = JSON.parse(
-  localStorage.getItem("crm_session")
+const confirmNewPassword = document.getElementById(
+  "confirmNewPassword"
 );
 
-const users = JSON.parse(
-  localStorage.getItem("crm_users")
-) || [];
+const currentPasswordError = document.getElementById(
+  "currentPasswordError"
+);
+
+const newPasswordError = document.getElementById(
+  "newPasswordError"
+);
+
+const confirmNewPasswordError = document.getElementById(
+  "confirmNewPasswordError"
+);
+
+const profileInitials = document.getElementById("profileInitials");
+const profileDisplayName = document.getElementById(
+  "profileDisplayName"
+);
+
+const profileDisplayEmail = document.getElementById(
+  "profileDisplayEmail"
+);
+
+const profileDisplayCompany = document.getElementById(
+  "profileDisplayCompany"
+);
+
+const session = getStorageData("crm_session", null);
+const users = getStorageData("crm_users", []);
 
 const userIndex = users.findIndex(function (user) {
-  return user.id === session.userId;
+  return session && user.id === session.userId;
 });
 
 let currentUser = users[userIndex];
 
-// Show user information on page
 function displayUser() {
   if (!currentUser) {
     return;
@@ -69,15 +99,18 @@ function displayUser() {
 
 displayUser();
 
-// Update profile information
 profileForm.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  profileFullNameError.textContent = "";
-  profileEmailError.textContent = "";
+  clearError(
+    profileFullName,
+    profileFullNameError
+  );
 
-  profileFullName.classList.remove("input-error");
-  profileEmail.classList.remove("input-error");
+  clearError(
+    profileEmail,
+    profileEmailError
+  );
 
   const fullNameValue = profileFullName.value.trim();
 
@@ -90,21 +123,22 @@ profileForm.addEventListener("submit", function (event) {
   let isValid = true;
 
   if (fullNameValue.length < 3) {
-    profileFullNameError.textContent =
-      "Full name must be at least 3 characters.";
+    showError(
+      profileFullName,
+      profileFullNameError,
+      "Full name must be at least 3 characters."
+    );
 
-    profileFullName.classList.add("input-error");
     isValid = false;
   }
 
-  const atIndex = emailValue.indexOf("@");
-  const dotIndex = emailValue.indexOf(".", atIndex + 1);
+  if (!isValidEmail(emailValue)) {
+    showError(
+      profileEmail,
+      profileEmailError,
+      "Please enter a valid email address."
+    );
 
-  if (atIndex <= 0 || dotIndex <= atIndex + 1) {
-    profileEmailError.textContent =
-      "Please enter a valid email address.";
-
-    profileEmail.classList.add("input-error");
     isValid = false;
   }
 
@@ -116,10 +150,12 @@ profileForm.addEventListener("submit", function (event) {
   });
 
   if (duplicateEmail) {
-    profileEmailError.textContent =
-      "This email is already registered.";
+    showError(
+      profileEmail,
+      profileEmailError,
+      "This email is already registered."
+    );
 
-    profileEmail.classList.add("input-error");
     isValid = false;
   }
 
@@ -133,57 +169,67 @@ profileForm.addEventListener("submit", function (event) {
 
   users[userIndex] = currentUser;
 
-  localStorage.setItem(
-    "crm_users",
-    JSON.stringify(users)
-  );
+  saveStorageData("crm_users", users);
 
   session.email = emailValue;
 
-  localStorage.setItem(
-    "crm_session",
-    JSON.stringify(session)
-  );
+  saveStorageData("crm_session", session);
 
   displayUser();
-  showToast("Profile updated successfully", "success");
+
+  showToast(
+    "Profile updated successfully",
+    "success"
+  );
 });
 
-// Change user password
 passwordForm.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  currentPasswordError.textContent = "";
-  newPasswordError.textContent = "";
-  confirmNewPasswordError.textContent = "";
+  clearError(
+    currentPassword,
+    currentPasswordError
+  );
 
-  currentPassword.classList.remove("input-error");
-  newPassword.classList.remove("input-error");
-  confirmNewPassword.classList.remove("input-error");
+  clearError(
+    newPassword,
+    newPasswordError
+  );
+
+  clearError(
+    confirmNewPassword,
+    confirmNewPasswordError
+  );
 
   let isValid = true;
 
   if (currentPassword.value !== currentUser.password) {
-    currentPasswordError.textContent =
-      "Current password is incorrect.";
+    showError(
+      currentPassword,
+      currentPasswordError,
+      "Current password is incorrect."
+    );
 
-    currentPassword.classList.add("input-error");
     isValid = false;
   }
 
   if (newPassword.value.length < 8) {
-    newPasswordError.textContent =
-      "Password must be at least 8 characters.";
+    showError(
+      newPassword,
+      newPasswordError,
+      "Password must be at least 8 characters."
+    );
 
-    newPassword.classList.add("input-error");
     isValid = false;
   }
 
   if (newPassword.value !== confirmNewPassword.value) {
-    confirmNewPasswordError.textContent =
-      "Passwords do not match.";
+    showError(
+      confirmNewPassword,
+      confirmNewPasswordError,
+      "Passwords do not match."
+    );
 
-    confirmNewPassword.classList.add("input-error");
     isValid = false;
   }
 
@@ -194,17 +240,16 @@ passwordForm.addEventListener("submit", function (event) {
   currentUser.password = newPassword.value;
   users[userIndex] = currentUser;
 
-  localStorage.setItem(
-    "crm_users",
-    JSON.stringify(users)
-  );
+  saveStorageData("crm_users", users);
 
   passwordForm.reset();
 
-  showToast("Password updated successfully", "success");
+  showToast(
+    "Password updated successfully",
+    "success"
+  );
 });
 
-// Reset saved client data
 resetCrmButton.addEventListener("click", function () {
   const confirmed = confirm(
     "Are you sure you want to reset CRM data?"
@@ -214,21 +259,14 @@ resetCrmButton.addEventListener("click", function () {
     return;
   }
 
-  localStorage.removeItem("crm_clients");
+  removeStorageData("crm_clients");
 
-  showToast("CRM data was reset", "success");
+  showToast(
+    "CRM data was reset",
+    "success"
+  );
 
   setTimeout(function () {
     window.location.href = "clients.html";
   }, 1000);
 });
-
-// Show toast message
-function showToast(message, type) {
-  toast.textContent = message;
-  toast.className = "toast " + type;
-
-  setTimeout(function () {
-    toast.className = "toast";
-  }, 3000);
-}

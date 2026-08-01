@@ -1,3 +1,5 @@
+import {getStorageData,saveStorageData} from "./storage.js";
+
 const loginForm = document.getElementById("loginForm");
 
 const emailInput = document.getElementById("loginEmail");
@@ -43,13 +45,7 @@ loginForm.addEventListener("submit", function (event) {
   }
 
   // Load users from localStorage
-  const savedUsers = localStorage.getItem("crm_users");
-
-  let users = [];
-
-  if (savedUsers) {
-    users = JSON.parse(savedUsers);
-  }
+ const users = getStorageData("crm_users", []);
 
   // Find user by email
   const user = users.find(function (currentUser) {
@@ -70,10 +66,7 @@ loginForm.addEventListener("submit", function (event) {
   };
 
   // Save session
-  localStorage.setItem(
-    "crm_session",
-    JSON.stringify(session)
-  );
+ saveStorageData("crm_session", session);
 
   window.location.href = "dashboard.html";
 });

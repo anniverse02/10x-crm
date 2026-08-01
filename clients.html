@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>Clients | 10X CRM</title>
 
@@ -26,13 +29,23 @@
     </nav>
 
     <div class="header-actions">
-      <button type="button" id="themeToggle" class="theme-button">
+
+      <button
+        type="button"
+        id="themeToggle"
+        class="theme-button"
+      >
         🌙
       </button>
 
-      <button type="button" id="logoutButton" class="logout-button">
+      <button
+        type="button"
+        id="logoutButton"
+        class="logout-button"
+      >
         Logout
       </button>
+
     </div>
 
   </header>
@@ -40,32 +53,44 @@
   <main class="clients-container">
 
     <section class="clients-heading">
+
       <div>
         <h1>Clients</h1>
         <p>Manage your clients and their deals.</p>
       </div>
 
-      <button type="button" id="openClientModal" class="add-client-button">
+      <button
+        type="button"
+        id="openClientModal"
+        class="add-client-button"
+      >
         + Add Client
       </button>
+
     </section>
 
     <section class="clients-toolbar">
 
       <div class="search-wrapper">
-        <label for="searchInput">Search clients</label>
+
+        <label for="searchInput">
+          Search clients
+        </label>
 
         <input
           type="text"
           id="searchInput"
           placeholder="Search by name or company"
         >
+
       </div>
 
       <div class="filter-wrapper">
+
         <p>Filter by status</p>
 
         <div class="filter-buttons">
+
           <button
             type="button"
             class="filter-button active"
@@ -105,35 +130,48 @@
           >
             Lost
           </button>
+
         </div>
+
       </div>
 
       <div class="sort-wrapper">
-        <label for="sortSelect">Sort clients</label>
+
+        <label for="sortSelect">
+          Sort clients
+        </label>
 
         <select id="sortSelect">
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="value-high">Deal Value: High to Low</option>
-          <option value="value-low">Deal Value: Low to High</option>
+          <option value="newest">
+            Newest
+          </option>
+
+          <option value="oldest">
+            Oldest
+          </option>
+
+          <option value="value-high">
+            Deal Value: High to Low
+          </option>
+
+          <option value="value-low">
+            Deal Value: Low to High
+          </option>
         </select>
+
       </div>
 
     </section>
 
     <section class="clients-list-section">
 
-      <div class="clients-list-header">
-        <span>Client</span>
-        <span>Company</span>
-        <span>Email</span>
-        <span>Status</span>
-        <span>Deal Value</span>
-        <span>Actions</span>
-      </div>
-
-      <div id="clientsList" class="clients-list">
-        <p class="loading-message">Loading clients...</p>
+      <div
+        id="clientsList"
+        class="clients-list"
+      >
+        <p class="loading-message">
+          Loading clients...
+        </p>
       </div>
 
     </section>
@@ -141,29 +179,38 @@
   </main>
 
   <!-- Add Client Modal -->
+
   <div id="clientModal" class="modal">
 
     <div class="modal-content">
 
       <div class="modal-header">
+
         <div>
           <h2>Add Client</h2>
-          <p>Enter the new client's information.</p>
+          <p>
+            Enter the new client's information.
+          </p>
         </div>
 
         <button
           type="button"
           id="closeClientModal"
           class="close-modal-button"
+          aria-label="Close modal"
         >
           &times;
         </button>
+
       </div>
 
       <form id="addClientForm" novalidate>
 
         <div class="form-group">
-          <label for="clientName">Name</label>
+
+          <label for="clientName">
+            Name
+          </label>
 
           <input
             type="text"
@@ -171,11 +218,18 @@
             placeholder="Enter client name"
           >
 
-          <p id="clientNameError" class="field-error"></p>
+          <p
+            id="clientNameError"
+            class="field-error"
+          ></p>
+
         </div>
 
         <div class="form-group">
-          <label for="clientEmail">Email</label>
+
+          <label for="clientEmail">
+            Email
+          </label>
 
           <input
             type="text"
@@ -183,11 +237,18 @@
             placeholder="client@example.com"
           >
 
-          <p id="clientEmailError" class="field-error"></p>
+          <p
+            id="clientEmailError"
+            class="field-error"
+          ></p>
+
         </div>
 
         <div class="form-group">
-          <label for="clientPhone">Phone</label>
+
+          <label for="clientPhone">
+            Phone
+          </label>
 
           <input
             type="text"
@@ -195,21 +256,32 @@
             placeholder="Phone number (optional)"
           >
 
-          <p id="clientPhoneError" class="field-error"></p>
+          <p
+            id="clientPhoneError"
+            class="field-error"
+          ></p>
+
         </div>
 
         <div class="form-group">
-          <label for="clientCompany">Company</label>
+
+          <label for="clientCompany">
+            Company
+          </label>
 
           <input
             type="text"
             id="clientCompany"
             placeholder="Company (optional)"
           >
+
         </div>
 
         <div class="form-group">
-          <label for="clientDealValue">Deal Value</label>
+
+          <label for="clientDealValue">
+            Deal Value
+          </label>
 
           <input
             type="number"
@@ -217,21 +289,41 @@
             placeholder="Enter deal value"
           >
 
-          <p id="clientDealValueError" class="field-error"></p>
+          <p
+            id="clientDealValueError"
+            class="field-error"
+          ></p>
+
         </div>
 
         <div class="form-group">
-          <label for="clientStatus">Status</label>
+
+          <label for="clientStatus">
+            Status
+          </label>
 
           <select id="clientStatus">
-            <option value="Lead" selected>Lead</option>
-            <option value="Contacted">Contacted</option>
-            <option value="Won">Won</option>
-            <option value="Lost">Lost</option>
+            <option value="Lead" selected>
+              Lead
+            </option>
+
+            <option value="Contacted">
+              Contacted
+            </option>
+
+            <option value="Won">
+              Won
+            </option>
+
+            <option value="Lost">
+              Lost
+            </option>
           </select>
+
         </div>
 
         <div class="modal-actions">
+
           <button
             type="button"
             id="cancelClientButton"
@@ -240,9 +332,13 @@
             Cancel
           </button>
 
-          <button type="submit" class="save-client-button">
+          <button
+            type="submit"
+            class="save-client-button"
+          >
             Add Client
           </button>
+
         </div>
 
       </form>
@@ -252,20 +348,24 @@
   </div>
 
   <!-- Client Details Modal -->
+
   <div id="clientDetailsModal" class="modal">
 
     <div class="modal-content details-modal-content">
 
       <div class="modal-header">
+
         <h2>Client Details</h2>
 
         <button
           type="button"
           id="closeDetailsModal"
           class="close-modal-button"
+          aria-label="Close details modal"
         >
           &times;
         </button>
+
       </div>
 
       <div id="clientDetailsContent"></div>
@@ -274,13 +374,25 @@
 
   </div>
 
-  <div id="toast" class="toast" role="status"></div>
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+  ></div>
+
   <script src="js/guard.js"></script>
+
   <script>
-   checkAuth() ;
+    checkAuth();
   </script>
-  
-  <script src="js/clients.js"></script>
+
+  <script
+    type="module"
+    src="js/clients.js"
+  ></script>
+
   <script src="js/theme.js"></script>
+
 </body>
 </html>
+```
