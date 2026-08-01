@@ -1,3 +1,5 @@
+import { showToast } from "./toast.js";
+
 const signupForm = document.getElementById("signupForm");
 
 const fullNameInput = document.getElementById("fullName");
@@ -162,13 +164,4 @@ function isValidEmail(email) {
   return atIndex > 0 && dotIndex > atIndex + 1;
 }
 
-function showToast(message, type) {
-  const toast = document.getElementById("toast");
 
-  toast.textContent = message;
-  toast.className = `toast ${type}`;
-
-  setTimeout(function () {
-    toast.className = "toast";
-  }, 3000);
-}
